@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View BIM Execution Plan Details">
+    <title>Mazzetti BIM Project Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .project-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .project-title {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .project-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .section-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-card h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-card h3 {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-item {
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: var(--border-radius);
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .contact-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.375rem 0.875rem;
+            border-radius: 16px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Mazzetti BIM Execution Plan</h1>
+            <p class="subtitle">Project Details</p>
+        </header>
+
+        <div class="bep-form" style="display: block;">
+            <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                <p>Loading project details...</p>
+            </div>
+
+            <!-- Project Content -->
+            <div id="projectContent" style="display: none;">
+                <div class="project-header">
+                    <h1 class="project-title" id="projectTitle"></h1>
+                    <p class="project-subtitle" id="projectSubtitle"></p>
+                    <div class="action-buttons">
+                        <button class="btn-primary" id="downloadPdfBtn">Download PDF</button>
+                        <button class="btn-primary" id="downloadDocxBtn">Download DOCX</button>
+                        <button class="btn-secondary" id="downloadJsonBtn">Download JSON</button>
+                    </div>
+                </div>
+
+                <!-- Project Information -->
+                <div class="section-card">
+                    <h2>1. Project Information</h2>
+                    <div class="info-grid" id="projectInfo"></div>
+                    <h3>Project Description</h3>
+                    <p id="projectDescription"></p>
+                </div>
+
+                <!-- Project Schedule -->
+                <div class="section-card">
+                    <h2>2. Project Schedule</h2>
+                    <div class="info-grid" id="projectSchedule"></div>
+                    <div id="milestonesSection"></div>
+                </div>
+
+                <!-- Key Contacts -->
+                <div class="section-card" id="contactsSection">
+                    <h2>3. Key Project Contacts</h2>
+                    <div id="contactsList"></div>
+                </div>
+
+                <!-- BIM Uses and Goals -->
+                <div class="section-card">
+                    <h2>4. BIM Uses and Project Goals</h2>
+                    <h3>Selected BIM Uses</h3>
+                    <div class="badge-list" id="bimUsesList"></div>
+                    <div id="goalsSection"></div>
+                </div>
+
+                <!-- BIM Roles -->
+                <div class="section-card" id="rolesSection">
+                    <h2>5. BIM Roles and Responsibilities</h2>
+                    <div id="rolesContent"></div>
+                </div>
+
+                <!-- Collaboration -->
+                <div class="section-card" id="collaborationSection">
+                    <h2>6. Collaboration and Communication</h2>
+                    <div id="collaborationContent"></div>
+                </div>
+
+                <!-- Technology -->
+                <div class="section-card" id="technologySection">
+                    <h2>7. Technology Requirements</h2>
+                    <div id="technologyContent"></div>
+                </div>
+
+                <!-- Model Management -->
+                <div class="section-card" id="modelSection">
+                    <h2>8. Model Management</h2>
+                    <div id="modelContent"></div>
+                </div>
+
+                <!-- Quality Control -->
+                <div class="section-card" id="qualitySection">
+                    <h2>9. Quality Control</h2>
+                    <div id="qualityContent"></div>
+                </div>
+
+                <!-- Deliverables -->
+                <div class="section-card" id="deliverablesSection">
+                    <h2>10. Deliverables and Risk Management</h2>
+                    <div id="deliverablesContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5001/api';
+        let currentProject = null;
+        let projectId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get project ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            projectId = urlParams.get('id');
+
+            if (!projectId) {
+                alert('No project ID specified');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            loadProject(projectId);
+            attachEventListeners();
+        });
+
+        function attachEventListeners() {
+            document.getElementById('downloadPdfBtn').addEventListener('click', () => downloadPDF(projectId));
+            document.getElementById('downloadDocxBtn').addEventListener('click', () => downloadDOCX(projectId));
+            document.getElementById('downloadJsonBtn').addEventListener('click', downloadJSON);
+        }
+
+        async function loadProject(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/projects/${id}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    currentProject = result.data;
+                    displayProject(currentProject);
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Error loading project:', error);
+                alert('Failed to load project details.');
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        function displayProject(project) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('projectContent').style.display = 'block';
+
+            // Header
+            document.getElementById('projectTitle').textContent = project.project_name || 'Untitled Project';
+            document.getElementById('projectSubtitle').textContent = `Owner: ${project.owner_name || 'N/A'}`;
+
+            // Project Information
+            const projectInfo = document.getElementById('projectInfo');
+            projectInfo.innerHTML = `
+                <div class="info-item">
+                    <div class="info-label">Delivery Method</div>
+                    <div class="info-value">${project.delivery_method || 'N/A'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Facility Type</div>
+                    <div class="info-value">${project.facility_type || 'N/A'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    <div class="info-value">${project.project_location || 'N/A'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Project Value</div>
+                    <div class="info-value">${project.project_value ? '$' + Number(project.project_value).toLocaleString() : 'N/A'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Project Area</div>
+                    <div class="info-value">${project.project_area ? Number(project.project_area).toLocaleString() + ' sq ft' : 'N/A'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">BIM Standard</div>
+                    <div class="info-value">${project.standard_used || 'N/A'}</div>
+                </div>
+            `;
+
+            document.getElementById('projectDescription').textContent = project.project_description || 'No description provided.';
+
+            // Schedule
+            const projectSchedule = document.getElementById('projectSchedule');
+            projectSchedule.innerHTML = `
+                <div class="info-item">
+                    <div class="info-label">Project Start</div>
+                    <div class="info-value">${formatDate(project.project_start_date)}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Project End</div>
+                    <div class="info-value">${formatDate(project.project_end_date)}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Design Phase End</div>
+                    <div class="info-value">${formatDate(project.design_phase_end)}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Construction Start</div>
+                    <div class="info-value">${formatDate(project.construction_start)}</div>
+                </div>
+            `;
+
+            // Contacts
+            if (project.contacts && project.contacts.length > 0) {
+                const contactsList = document.getElementById('contactsList');
+                contactsList.innerHTML = project.contacts.map(contact => `
+                    <div class="contact-card">
+                        <h3>${contact.organization}</h3>
+                        <p><strong>Role:</strong> ${contact.role}</p>
+                        <p><strong>Name:</strong> ${contact.contact_name}</p>
+                        <p><strong>Email:</strong> ${contact.email}</p>
+                        ${contact.phone ? `<p><strong>Phone:</strong> ${contact.phone}</p>` : ''}
+                    </div>
+                `).join('');
+            } else {
+                document.getElementById('contactsSection').style.display = 'none';
+            }
+
+            // BIM Uses
+            if (project.bim_uses && project.bim_uses.length > 0) {
+                const bimUsesList = document.getElementById('bimUsesList');
+                bimUsesList.innerHTML = project.bim_uses.map(use =>
+                    `<span class="badge">${formatBimUse(use)}</span>`
+                ).join('');
+            }
+
+            // Display all other sections
+            displaySection('rolesSection', 'rolesContent', project.bim_roles);
+            displaySection('collaborationSection', 'collaborationContent', project.collaboration);
+            displaySection('technologySection', 'technologyContent', project.technology);
+            displaySection('modelSection', 'modelContent', project.model_management);
+            displaySection('qualitySection', 'qualityContent', project.quality_control);
+            displaySection('deliverablesSection', 'deliverablesContent', project.deliverables_risk);
+
+            // Software
+            if (project.software && project.software.length > 0) {
+                const technologyContent = document.getElementById('technologyContent');
+                technologyContent.innerHTML += `
+                    <h3>Software Applications</h3>
+                    <div class="badge-list">
+                        ${project.software.map(sw => `<span class="badge" style="background: var(--secondary-color);">${sw}</span>`).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        function displaySection(sectionId, contentId, data) {
+            if (!data) {
+                document.getElementById(sectionId).style.display = 'none';
+                return;
+            }
+
+            const content = document.getElementById(contentId);
+            let html = '';
+
+            Object.keys(data).forEach(key => {
+                if (key !== 'id' && key !== 'project_id' && data[key]) {
+                    html += `
+                        <div class="info-item">
+                            <div class="info-label">${formatLabel(key)}</div>
+                            <div class="info-value">${data[key]}</div>
+                        </div>
+                    `;
+                }
+            });
+
+            if (html) {
+                content.innerHTML = `<div class="info-grid">${html}</div>`;
+            } else {
+                document.getElementById(sectionId).style.display = 'none';
+            }
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return 'Not specified';
+            try {
+                return new Date(dateStr).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            } catch {
+                return dateStr;
+            }
+        }
+
+        function formatLabel(key) {
+            return key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function formatBimUse(use) {
+            return use.split('-').map(word =>
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+        }
+
+        async function downloadPDF(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/projects/${id}/export/pdf`);
+                if (!response.ok) throw new Error('Failed to generate PDF');
+
+                const blob = await response.blob();
+                downloadBlob(blob, 'BIM_Execution_Plan.pdf', response);
+            } catch (error) {
+                console.error('Error downloading PDF:', error);
+                alert('Failed to download PDF.');
+            }
+        }
+
+        async function downloadDOCX(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/projects/${id}/export/docx`);
+                if (!response.ok) throw new Error('Failed to generate DOCX');
+
+                const blob = await response.blob();
+                downloadBlob(blob, 'BIM_Execution_Plan.docx', response);
+            } catch (error) {
+                console.error('Error downloading DOCX:', error);
+                alert('Failed to download DOCX.');
+            }
+        }
+
+        function downloadJSON() {
+            const dataStr = JSON.stringify(currentProject, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `BIM_Execution_Plan_${currentProject.project_name}_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadBlob(blob, defaultFilename, response) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+
+            const contentDisposition = response.headers.get('Content-Disposition');
+            let filename = defaultFilename;
+            if (contentDisposition) {
+                const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
+                if (matches != null && matches[1]) {
+                    filename = matches[1].replace(/['"]/g, '');
+                }
+            }
+
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

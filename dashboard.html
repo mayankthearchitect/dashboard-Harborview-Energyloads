@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BIM Execution Plan Dashboard - View and manage your BIM projects">
+    <title>Mazzetti BIM Projects Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar input {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .project-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .project-card h3 {
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-card p {
+            margin: 0.5rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .project-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .project-actions button {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state h2 {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+            font-size: 0.9375rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Mazzetti BIM Execution Plan</h1>
+            <p class="subtitle">Project Dashboard</p>
+        </header>
+
+        <div class="bep-form" style="display: block;">
+            <div class="dashboard-header">
+                <h2>All Projects</h2>
+                <a href="bim-execution-plan.html" class="btn-primary">+ Create New BEP</a>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-container" id="statsContainer">
+                <div class="stat-card">
+                    <h3 id="totalProjects">0</h3>
+                    <p>Total Projects</p>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search by project name or owner...">
+                <button class="btn-secondary" id="searchBtn">Search</button>
+                <button class="btn-secondary" id="clearBtn">Clear</button>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                <p>Loading projects...</p>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="projects-grid" id="projectsGrid" style="display: none;"></div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <h2>No Projects Found</h2>
+                <p>Create your first BIM Execution Plan to get started.</p>
+                <br>
+                <a href="bim-execution-plan.html" class="btn-primary">Create New BEP</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5001/api';
+
+        let allProjects = [];
+
+        // Load projects on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProjects();
+            attachEventListeners();
+        });
+
+        function attachEventListeners() {
+            document.getElementById('searchBtn').addEventListener('click', handleSearch);
+            document.getElementById('clearBtn').addEventListener('click', clearSearch);
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+        }
+
+        async function loadProjects() {
+            try {
+                showLoading();
+
+                const response = await fetch(`${API_BASE_URL}/projects`);
+                const result = await response.json();
+
+                if (result.success) {
+                    allProjects = result.data;
+                    displayProjects(allProjects);
+                    updateStats(allProjects);
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                alert('Failed to load projects. Please check if the server is running.');
+                hideLoading();
+                showEmptyState();
+            }
+        }
+
+        async function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+
+            if (!searchTerm) {
+                displayProjects(allProjects);
+                return;
+            }
+
+            try {
+                showLoading();
+
+                const response = await fetch(`${API_BASE_URL}/projects/search?q=${encodeURIComponent(searchTerm)}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    displayProjects(result.data);
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Error searching projects:', error);
+                alert('Failed to search projects.');
+                hideLoading();
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            displayProjects(allProjects);
+        }
+
+        function displayProjects(projects) {
+            hideLoading();
+
+            const grid = document.getElementById('projectsGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            if (projects.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            grid.style.display = 'grid';
+            grid.innerHTML = '';
+
+            projects.forEach(project => {
+                const card = createProjectCard(project);
+                grid.appendChild(card);
+            });
+        }
+
+        function createProjectCard(project) {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+
+            const createdDate = new Date(project.created_at).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+
+            const startDate = project.project_start_date
+                ? new Date(project.project_start_date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                })
+                : 'Not specified';
+
+            card.innerHTML = `
+                <h3>${escapeHtml(project.project_name)}</h3>
+                <p><strong>Owner:</strong> ${escapeHtml(project.owner_name)}</p>
+                <p><strong>Type:</strong> ${escapeHtml(project.facility_type || 'N/A')}</p>
+                <p><strong>Start Date:</strong> ${startDate}</p>
+                <div class="project-meta">
+                    <span class="project-badge">ID: ${project.id}</span>
+                    <span class="project-badge" style="background: var(--secondary-color);">Created: ${createdDate}</span>
+                </div>
+                <div class="project-actions">
+                    <button class="btn-primary" onclick="viewProject(${project.id})">
+                        <span class="btn-icon">View</span>
+                    </button>
+                    <button class="btn-primary" onclick="downloadPDF(${project.id})">
+                        <span class="btn-icon">PDF</span>
+                    </button>
+                    <button class="btn-primary" onclick="downloadDOCX(${project.id})">
+                        <span class="btn-icon">DOCX</span>
+                    </button>
+                    <button class="btn-secondary" onclick="deleteProject(${project.id}, '${escapeHtml(project.project_name)}')">
+                        <span class="btn-icon">Delete</span>
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function updateStats(projects) {
+            document.getElementById('totalProjects').textContent = projects.length;
+        }
+
+        function showLoading() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('projectsGrid').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingState').style.display = 'none';
+        }
+
+        function showEmptyState() {
+            document.getElementById('emptyState').style.display = 'block';
+        }
+
+        function viewProject(projectId) {
+            window.location.href = `view-project.html?id=${projectId}`;
+        }
+
+        async function downloadPDF(projectId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/projects/${projectId}/export/pdf`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate PDF');
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'BIM_Execution_Plan.pdf';
+                if (contentDisposition) {
+                    const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
+                    if (matches != null && matches[1]) {
+                        filename = matches[1].replace(/['"]/g, '');
+                    }
+                }
+
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Error downloading PDF:', error);
+                alert('Failed to download PDF.');
+            }
+        }
+
+        async function downloadDOCX(projectId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/projects/${projectId}/export/docx`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate DOCX');
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'BIM_Execution_Plan.docx';
+                if (contentDisposition) {
+                    const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
+                    if (matches != null && matches[1]) {
+                        filename = matches[1].replace(/['"]/g, '');
+                    }
+                }
+
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Error downloading DOCX:', error);
+                alert('Failed to download DOCX.');
+            }
+        }
+
+        async function deleteProject(projectId, projectName) {
+            if (!confirm(`Are you sure you want to delete "${projectName}"?\n\nThis action cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Project deleted successfully!');
+                    loadProjects(); // Reload the list
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Error deleting project:', error);
+                alert('Failed to delete project.');
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

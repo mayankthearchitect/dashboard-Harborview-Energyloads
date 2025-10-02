@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BIM Execution Plan (BEP) Form - Fill out comprehensive project information for Building Information Modeling">
+    <title>Mazzetti BIM Execution Plan</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h1>Mazzetti BIM Execution Plan</h1>
+                    <p class="subtitle">Create and manage your project deliverables</p>
+                </div>
+                <a href="dashboard.html" class="btn-secondary" style="margin-top: 1rem;">View All Projects</a>
+            </div>
+        </header>
+
+        <form id="bepForm" class="bep-form" novalidate>
+            <!-- Progress Indicator -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Section 1 of 10</div>
+
+            <!-- Section 1: Project Information -->
+            <section class="form-section active" data-section="1">
+                <h2>1. Project Information</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="projectName">Project Name <span class="required">*</span></label>
+                        <input type="text" id="projectName" name="projectName" required>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="ownerName">Owner Name <span class="required">*</span></label>
+                        <input type="text" id="ownerName" name="ownerName" required>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="projectDescription">Project Description <span class="required">*</span></label>
+                        <textarea id="projectDescription" name="projectDescription" rows="4" required></textarea>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deliveryMethod">Delivery Method <span class="required">*</span></label>
+                        <select id="deliveryMethod" name="deliveryMethod" required>
+                            <option value="">Select...</option>
+                            <option value="design-bid-build">Design-Bid-Build</option>
+                            <option value="design-build">Design-Build</option>
+                            <option value="cm-at-risk">CM at Risk</option>
+                            <option value="ipdp">Integrated Project Delivery (IPD)</option>
+                            <option value="ppp">Public-Private Partnership</option>
+                        </select>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="facilityType">Facility Type <span class="required">*</span></label>
+                        <select id="facilityType" name="facilityType" required>
+                            <option value="">Select...</option>
+                            <option value="commercial">Commercial</option>
+                            <option value="residential">Residential</option>
+                            <option value="industrial">Industrial</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="educational">Educational</option>
+                            <option value="infrastructure">Infrastructure</option>
+                            <option value="mixed-use">Mixed-Use</option>
+                        </select>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectValue">Project Value (USD)</label>
+                        <input type="number" id="projectValue" name="projectValue" min="0" step="1000">
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectArea">Project Area (sq ft)</label>
+                        <input type="number" id="projectArea" name="projectArea" min="0" step="100">
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectLocation">Project Location</label>
+                        <input type="text" id="projectLocation" name="projectLocation">
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="standardUsed">BIM Standard Used</label>
+                        <select id="standardUsed" name="standardUsed">
+                            <option value="">Select...</option>
+                            <option value="iso-19650">ISO 19650</option>
+                            <option value="nbims-us">NBIMS-US</option>
+                            <option value="pasi-pas-1192">PAS 1192</option>
+                            <option value="singapore-bim">Singapore BIM Guide</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Key Contacts -->
+            <section class="form-section" data-section="2">
+                <h2>2. Key Project Contacts</h2>
+                <div id="contactsContainer">
+                    <div class="contact-item" data-contact="1">
+                        <h3>Contact 1</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="contactOrg1">Organization <span class="required">*</span></label>
+                                <input type="text" id="contactOrg1" name="contactOrg1" required>
+                                <span class="error-message"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactRole1">Role <span class="required">*</span></label>
+                                <select id="contactRole1" name="contactRole1" required>
+                                    <option value="">Select...</option>
+                                    <option value="owner">Owner</option>
+                                    <option value="architect">Architect</option>
+                                    <option value="engineer">Engineer</option>
+                                    <option value="contractor">General Contractor</option>
+                                    <option value="bim-manager">BIM Manager</option>
+                                    <option value="consultant">Consultant</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <span class="error-message"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactName1">Contact Name <span class="required">*</span></label>
+                                <input type="text" id="contactName1" name="contactName1" required>
+                                <span class="error-message"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactEmail1">Email <span class="required">*</span></label>
+                                <input type="email" id="contactEmail1" name="contactEmail1" required>
+                                <span class="error-message"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactPhone1">Phone</label>
+                                <input type="tel" id="contactPhone1" name="contactPhone1">
+                                <span class="error-message"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn-secondary" id="addContact">+ Add Another Contact</button>
+            </section>
+
+            <!-- Section 3: Project Goals -->
+            <section class="form-section" data-section="3">
+                <h2>3. Project Goals & BIM Uses</h2>
+                <div class="form-group full-width">
+                    <label>Select Primary BIM Uses <span class="required">*</span></label>
+                    <div class="checkbox-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="design-authoring" required>
+                            <span>Design Authoring</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="design-review">
+                            <span>Design Review</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="3d-coordination">
+                            <span>3D Coordination</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="code-validation">
+                            <span>Code Validation</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="cost-estimation">
+                            <span>Cost Estimation</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="4d-scheduling">
+                            <span>4D Scheduling</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="structural-analysis">
+                            <span>Structural Analysis</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="energy-analysis">
+                            <span>Energy Analysis</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="lighting-analysis">
+                            <span>Lighting Analysis</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="sustainability">
+                            <span>Sustainability Evaluation</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="site-analysis">
+                            <span>Site Analysis</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="construction-planning">
+                            <span>Construction System Design</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="digital-fabrication">
+                            <span>Digital Fabrication</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="asset-management">
+                            <span>Asset Management</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="bimUse" value="facilities-management">
+                            <span>Facilities Management</span>
+                        </label>
+                    </div>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="projectGoals">Key Project Goals <span class="required">*</span></label>
+                    <textarea id="projectGoals" name="projectGoals" rows="4" placeholder="Describe the key goals and objectives for using BIM on this project..." required></textarea>
+                    <span class="error-message"></span>
+                </div>
+            </section>
+
+            <!-- Section 4: BIM Roles & Responsibilities -->
+            <section class="form-section" data-section="4">
+                <h2>4. BIM Roles & Responsibilities</h2>
+                <div class="form-group full-width">
+                    <label for="bimManager">BIM Manager <span class="required">*</span></label>
+                    <input type="text" id="bimManager" name="bimManager" placeholder="Name and Organization" required>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="bimCoordinator">BIM Coordinator(s)</label>
+                    <input type="text" id="bimCoordinator" name="bimCoordinator" placeholder="Name(s) and Organization(s)">
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="modelAuthors">Model Authors</label>
+                    <textarea id="modelAuthors" name="modelAuthors" rows="3" placeholder="List all disciplines and responsible parties for model authoring..."></textarea>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="additionalRoles">Additional Roles & Responsibilities</label>
+                    <textarea id="additionalRoles" name="additionalRoles" rows="4" placeholder="Describe any additional BIM-related roles and their responsibilities..."></textarea>
+                    <span class="error-message"></span>
+                </div>
+            </section>
+
+            <!-- Section 5: Project Schedule -->
+            <section class="form-section" data-section="5">
+                <h2>5. Project Schedule & Milestones</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="projectStartDate">Project Start Date <span class="required">*</span></label>
+                        <input type="date" id="projectStartDate" name="projectStartDate" required>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectEndDate">Project End Date <span class="required">*</span></label>
+                        <input type="date" id="projectEndDate" name="projectEndDate" required>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="designPhaseEnd">Design Phase Completion</label>
+                        <input type="date" id="designPhaseEnd" name="designPhaseEnd">
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="constructionStart">Construction Start</label>
+                        <input type="date" id="constructionStart" name="constructionStart">
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="keyMilestones">Key Milestones & Deliverables</label>
+                    <textarea id="keyMilestones" name="keyMilestones" rows="4" placeholder="List key project milestones and BIM deliverables..."></textarea>
+                    <span class="error-message"></span>
+                </div>
+            </section>
+
+            <!-- Section 6: Collaboration Procedures -->
+            <section class="form-section" data-section="6">
+                <h2>6. Collaboration & Communication</h2>
+                <div class="form-group full-width">
+                    <label for="collaborationPlatform">Primary Collaboration Platform <span class="required">*</span></label>
+                    <select id="collaborationPlatform" name="collaborationPlatform" required>
+                        <option value="">Select...</option>
+                        <option value="bim360">Autodesk BIM 360 / Construction Cloud</option>
+                        <option value="acc">Autodesk Construction Cloud</option>
+                        <option value="procore">Procore</option>
+                        <option value="trimble-connect">Trimble Connect</option>
+                        <option value="bimsync">Bimsync</option>
+                        <option value="sharepoint">Microsoft SharePoint</option>
+                        <option value="projectwise">Bentley ProjectWise</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="meetingSchedule">BIM Coordination Meeting Schedule <span class="required">*</span></label>
+                    <select id="meetingSchedule" name="meetingSchedule" required>
+                        <option value="">Select...</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="biweekly">Bi-weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="as-needed">As Needed</option>
+                    </select>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="fileNamingConvention">File Naming Convention <span class="required">*</span></label>
+                    <input type="text" id="fileNamingConvention" name="fileNamingConvention" placeholder="e.g., [Discipline]-[Building]-[Level]-[Type]-[Sequence]" required>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="communicationProtocol">Communication Protocol</label>
+                    <textarea id="communicationProtocol" name="communicationProtocol" rows="3" placeholder="Describe how team members will communicate issues, updates, and requests..."></textarea>
+                    <span class="error-message"></span>
+                </div>
+            </section>
+
+            <!-- Section 7: Technology & Software -->
+            <section class="form-section" data-section="7">
+                <h2>7. Technology & Software Requirements</h2>
+                <div class="form-group full-width">
+                    <label>Primary Software Applications <span class="required">*</span></label>
+                    <div class="checkbox-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="software" value="revit" required>
+                            <span>Autodesk Revit</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="software" value="archicad">
+                            <span>ArchiCAD</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="software" value="navisworks">
+                            <span>Navisworks</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="software" value="tekla">
+                            <span>Tekla Structures</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="software" value="bentley">
+                            <span>Bentley OpenBuildings</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="software" value="civil3d">
+                            <span>Civil 3D</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="software" value="solibri">
+                            <span>Solibri</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="software" value="rhino">
+                            <span>Rhino + Grasshopper</span>
+                        </label>
+                    </div>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="fileFormats">File Exchange Formats <span class="required">*</span></label>
+                    <input type="text" id="fileFormats" name="fileFormats" placeholder="e.g., RVT, IFC, DWG, NWD, PDF" required>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="coordinateSystem">Coordinate System & Units <span class="required">*</span></label>
+                    <input type="text" id="coordinateSystem" name="coordinateSystem" placeholder="e.g., NAD83, State Plane - Imperial/Metric" required>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="additionalSoftware">Additional Software or Tools</label>
+                    <textarea id="additionalSoftware" name="additionalSoftware" rows="2" placeholder="List any other software tools to be used..."></textarea>
+                    <span class="error-message"></span>
+                </div>
+            </section>
+
+            <!-- Section 8: Model Management -->
+            <section class="form-section" data-section="8">
+                <h2>8. Model Management & Standards</h2>
+                <div class="form-group full-width">
+                    <label for="lodRequirements">Level of Development (LOD) Requirements <span class="required">*</span></label>
+                    <textarea id="lodRequirements" name="lodRequirements" rows="3" placeholder="Specify LOD requirements for each project phase (e.g., LOD 200 for SD, LOD 300 for DD, LOD 350 for CD...)" required></textarea>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="modelStructure">Model Structure & Organization <span class="required">*</span></label>
+                    <textarea id="modelStructure" name="modelStructure" rows="3" placeholder="Describe how models will be organized (separate files, worksets, federated models...)" required></textarea>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="originPoint">Model Origin Point & Orientation</label>
+                    <input type="text" id="originPoint" name="originPoint" placeholder="e.g., Project Base Point at survey coordinates...">
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="modelingStandards">Modeling Standards & Guidelines</label>
+                    <textarea id="modelingStandards" name="modelingStandards" rows="3" placeholder="Reference any specific modeling standards, templates, or guidelines to be followed..."></textarea>
+                    <span class="error-message"></span>
+                </div>
+            </section>
+
+            <!-- Section 9: Quality Control -->
+            <section class="form-section" data-section="9">
+                <h2>9. Quality Control & Validation</h2>
+                <div class="form-group full-width">
+                    <label for="qaProcess">Quality Assurance Process <span class="required">*</span></label>
+                    <textarea id="qaProcess" name="qaProcess" rows="4" placeholder="Describe the quality control procedures, clash detection protocols, and model validation processes..." required></textarea>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="clashDetection">Clash Detection Schedule <span class="required">*</span></label>
+                    <select id="clashDetection" name="clashDetection" required>
+                        <option value="">Select...</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="biweekly">Bi-weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="milestone">At Key Milestones</option>
+                    </select>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="issueResolution">Issue Resolution Protocol</label>
+                    <textarea id="issueResolution" name="issueResolution" rows="3" placeholder="Describe how issues, clashes, and conflicts will be tracked and resolved..."></textarea>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="modelAudit">Model Audit Procedures</label>
+                    <textarea id="modelAudit" name="modelAudit" rows="3" placeholder="Describe model audit and health check procedures..."></textarea>
+                    <span class="error-message"></span>
+                </div>
+            </section>
+
+            <!-- Section 10: Deliverables & Risk Management -->
+            <section class="form-section" data-section="10">
+                <h2>10. Deliverables & Risk Management</h2>
+                <div class="form-group full-width">
+                    <label for="projectDeliverables">BIM Deliverables <span class="required">*</span></label>
+                    <textarea id="projectDeliverables" name="projectDeliverables" rows="4" placeholder="List all BIM deliverables, including models, drawings, reports, and data exports..." required></textarea>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="dataHandover">Data Handover Requirements</label>
+                    <textarea id="dataHandover" name="dataHandover" rows="3" placeholder="Describe data handover requirements for facilities management or operations..."></textarea>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="riskRegister">Risk Register</label>
+                    <textarea id="riskRegister" name="riskRegister" rows="4" placeholder="Identify potential risks related to BIM implementation and mitigation strategies..."></textarea>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="additionalNotes">Additional Notes or Requirements</label>
+                    <textarea id="additionalNotes" name="additionalNotes" rows="3" placeholder="Any additional information or special requirements..."></textarea>
+                    <span class="error-message"></span>
+                </div>
+            </section>
+
+            <!-- Navigation Buttons -->
+            <div class="form-navigation">
+                <button type="button" class="btn-secondary" id="prevBtn" disabled>Previous</button>
+                <button type="button" class="btn-primary" id="nextBtn">Next</button>
+                <button type="submit" class="btn-submit" id="submitBtn" style="display: none;">Generate BEP</button>
+            </div>
+        </form>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="success-message" style="display: none;">
+            <h2>BIM Execution Plan Generated Successfully!</h2>
+            <p>Your BEP has been created. You can now download or export the document.</p>
+            <div class="success-actions">
+                <button class="btn-primary" id="downloadPdfBtn">Download as PDF</button>
+                <button class="btn-primary" id="downloadDocxBtn">Download as DOCX</button>
+                <button class="btn-secondary" id="downloadBtn">Download as JSON</button>
+                <button class="btn-secondary" id="printBtn">Print Summary</button>
+                <button class="btn-secondary" id="resetBtn">Create New BEP</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
