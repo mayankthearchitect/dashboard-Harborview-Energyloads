@@ -15,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #1a1a1a;
+            background: #f5f5f5;
             min-height: 100vh;
             padding: 20px;
         }
@@ -26,22 +26,22 @@
         }
 
         .header {
-            background: #2b2b2b;
+            background: #ffffff;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
             text-align: center;
         }
 
         .header h1 {
-            color: #ffffff;
+            color: #2c3e50;
             font-size: 2.5em;
             margin-bottom: 10px;
         }
 
         .header p {
-            color: #b0b0b0;
+            color: #6c757d;
             font-size: 1.1em;
         }
 
@@ -53,20 +53,21 @@
         }
 
         .stat-card {
-            background: #2b2b2b;
+            background: #ffffff;
             padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
         }
 
         .stat-card h3 {
-            color: #b0b0b0;
+            color: #6c757d;
             font-size: 0.9em;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -91,72 +92,76 @@
         }
 
         .stat-card .unit {
-            color: #b0b0b0;
+            color: #6c757d;
             font-size: 0.9em;
         }
 
         .stat-card.heating {
-            background: #dc3545;
+            background: #ffe5e5;
+            border-left: 4px solid #ffb3b3;
         }
 
         .stat-card.heating h3,
         .stat-card.heating .unit {
-            color: rgba(255, 255, 255, 0.8);
+            color: #8b4545;
         }
 
         .stat-card.heating .value {
-            color: #ffffff;
+            color: #d63447;
         }
 
         .stat-card.cooling {
-            background: #5bc0de;
+            background: #e3f2fd;
+            border-left: 4px solid #90caf9;
         }
 
         .stat-card.cooling h3,
         .stat-card.cooling .unit {
-            color: rgba(255, 255, 255, 0.8);
+            color: #455a64;
         }
 
         .stat-card.cooling .value {
-            color: #ffffff;
+            color: #1976d2;
         }
 
         .stat-card.peak-heating {
-            background: #A20202;
+            background: #ffd6d6;
+            border-left: 4px solid #ff8080;
         }
 
         .stat-card.peak-heating h3,
         .stat-card.peak-heating .unit {
-            color: rgba(255, 255, 255, 0.8);
+            color: #8b4545;
         }
 
         .stat-card.peak-heating .value {
-            color: #ffffff;
+            color: #c62828;
         }
 
         .stat-card.peak-cooling {
-            background: #0320FC;
+            background: #cfe9ff;
+            border-left: 4px solid #64b5f6;
         }
 
         .stat-card.peak-cooling h3,
         .stat-card.peak-cooling .unit {
-            color: rgba(255, 255, 255, 0.8);
+            color: #455a64;
         }
 
         .stat-card.peak-cooling .value {
-            color: #ffffff;
+            color: #1565c0;
         }
 
         .chart-container {
-            background: #2b2b2b;
+            background: #ffffff;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
         }
 
         .chart-container h2 {
-            color: #ffffff;
+            color: #2c3e50;
             margin-bottom: 20px;
             font-size: 1.5em;
         }
@@ -167,10 +172,10 @@
         }
 
         .controls {
-            background: #2b2b2b;
+            background: #ffffff;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
             display: flex;
             flex-wrap: wrap;
@@ -179,34 +184,36 @@
         }
 
         .controls label {
-            color: #ffffff;
+            color: #2c3e50;
             font-weight: 600;
             margin-right: 10px;
         }
 
         .controls select {
             padding: 10px 15px;
-            border: 2px solid #444;
+            border: 2px solid #dee2e6;
             border-radius: 8px;
-            background: #1a1a1a;
-            color: #ffffff;
+            background: #f8f9fa;
+            color: #2c3e50;
             font-size: 1em;
             cursor: pointer;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
         }
 
         .controls select:hover {
-            border-color: #5bc0de;
+            border-color: #90caf9;
+            background: #ffffff;
         }
 
         .controls select:focus {
             outline: none;
-            border-color: #5bc0de;
+            border-color: #64b5f6;
+            background: #ffffff;
         }
 
         .loading {
             text-align: center;
-            color: white;
+            color: #2c3e50;
             font-size: 1.5em;
             padding: 50px;
         }
@@ -576,16 +583,16 @@
                         {
                             label: 'Heating Load (kBtu/h)',
                             data: filteredData.map(d => d.heating),
-                            borderColor: '#dc3545',
-                            backgroundColor: chartType === 'area' ? 'rgba(220, 53, 69, 0.2)' : 'rgba(220, 53, 69, 0.5)',
+                            borderColor: '#ff8a80',
+                            backgroundColor: chartType === 'area' ? 'rgba(255, 138, 128, 0.3)' : 'rgba(255, 138, 128, 0.6)',
                             fill: chartType === 'area',
                             tension: 0.4
                         },
                         {
                             label: 'Cooling Load (kBtu/h)',
                             data: filteredData.map(d => d.cooling),
-                            borderColor: '#5bc0de',
-                            backgroundColor: chartType === 'area' ? 'rgba(91, 192, 222, 0.2)' : 'rgba(91, 192, 222, 0.5)',
+                            borderColor: '#82b1ff',
+                            backgroundColor: chartType === 'area' ? 'rgba(130, 177, 255, 0.3)' : 'rgba(130, 177, 255, 0.6)',
                             fill: chartType === 'area',
                             tension: 0.4
                         }
@@ -602,7 +609,7 @@
                         legend: {
                             position: 'top',
                             labels: {
-                                color: '#ffffff',
+                                color: '#2c3e50',
                                 font: {
                                     size: 12
                                 }
@@ -620,33 +627,33 @@
                         x: {
                             display: true,
                             grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                                color: 'rgba(0, 0, 0, 0.08)'
                             },
                             title: {
                                 display: true,
                                 text: 'Date & Time',
-                                color: '#ffffff'
+                                color: '#2c3e50'
                             },
                             ticks: {
                                 maxRotation: 45,
                                 minRotation: 45,
                                 autoSkip: true,
                                 maxTicksLimit: 20,
-                                color: '#b0b0b0'
+                                color: '#6c757d'
                             }
                         },
                         y: {
                             display: true,
                             grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                                color: 'rgba(0, 0, 0, 0.08)'
                             },
                             title: {
                                 display: true,
                                 text: 'Load (kBtu/h)',
-                                color: '#ffffff'
+                                color: '#2c3e50'
                             },
                             ticks: {
-                                color: '#b0b0b0'
+                                color: '#6c757d'
                             }
                         }
                     }
@@ -705,32 +712,32 @@
                         {
                             label: 'Winter (Dec-Feb)',
                             data: winter,
-                            backgroundColor: 'rgba(91, 192, 222, 0.6)',
-                            borderColor: '#5bc0de',
+                            backgroundColor: 'rgba(130, 177, 255, 0.6)',
+                            borderColor: '#82b1ff',
                             pointRadius: 3,
                             pointHoverRadius: 5
                         },
                         {
                             label: 'Spring (Mar-May)',
                             data: spring,
-                            backgroundColor: 'rgba(76, 175, 80, 0.6)',
-                            borderColor: '#4caf50',
+                            backgroundColor: 'rgba(165, 214, 167, 0.6)',
+                            borderColor: '#a5d6a7',
                             pointRadius: 3,
                             pointHoverRadius: 5
                         },
                         {
                             label: 'Summer (Jun-Aug)',
                             data: summer,
-                            backgroundColor: 'rgba(255, 152, 0, 0.6)',
-                            borderColor: '#ff9800',
+                            backgroundColor: 'rgba(255, 213, 128, 0.6)',
+                            borderColor: '#ffd580',
                             pointRadius: 3,
                             pointHoverRadius: 5
                         },
                         {
                             label: 'Fall (Sep-Nov)',
                             data: fall,
-                            backgroundColor: 'rgba(156, 39, 176, 0.6)',
-                            borderColor: '#9c27b0',
+                            backgroundColor: 'rgba(206, 147, 216, 0.6)',
+                            borderColor: '#ce93d8',
                             pointRadius: 3,
                             pointHoverRadius: 5
                         }
@@ -743,7 +750,7 @@
                         legend: {
                             position: 'top',
                             labels: {
-                                color: '#ffffff',
+                                color: '#2c3e50',
                                 font: {
                                     size: 12
                                 },
@@ -763,28 +770,28 @@
                     scales: {
                         x: {
                             grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                                color: 'rgba(0, 0, 0, 0.08)'
                             },
                             title: {
                                 display: true,
                                 text: 'Heating Load (kBtu/h)',
-                                color: '#ffffff'
+                                color: '#2c3e50'
                             },
                             ticks: {
-                                color: '#b0b0b0'
+                                color: '#6c757d'
                             }
                         },
                         y: {
                             grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                                color: 'rgba(0, 0, 0, 0.08)'
                             },
                             title: {
                                 display: true,
                                 text: 'Cooling Load (kBtu/h)',
-                                color: '#ffffff'
+                                color: '#2c3e50'
                             },
                             ticks: {
-                                color: '#b0b0b0'
+                                color: '#6c757d'
                             }
                         }
                     }
