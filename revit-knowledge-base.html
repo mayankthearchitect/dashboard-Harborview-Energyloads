@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Revit Knowledge Base - Search and find solutions for your Revit workflow issues">
+    <title>Revit Knowledge Base | Mazzetti</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Knowledge Base Specific Styles */
+        .kb-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .kb-header h2 {
+            margin: 0;
+            border: none;
+            padding: 0;
+        }
+
+        .kb-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            padding: 2.5rem 2rem;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .search-section h2 {
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 1.75rem;
+            border: none;
+            padding: 0;
+        }
+
+        .search-section p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .search-container input {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            font-size: 1.0625rem;
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+        }
+
+        .search-container input:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3);
+        }
+
+        .search-container button {
+            padding: 1rem 2rem;
+            background: white;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .search-container button:hover {
+            background: var(--bg-tertiary);
+            transform: none;
+        }
+
+        /* Categories */
+        .categories-section {
+            margin-bottom: 2rem;
+        }
+
+        .categories-section h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .category-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .category-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .category-card.active {
+            border-color: var(--primary-color);
+            background: rgba(0, 101, 149, 0.05);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-card h4 {
+            margin: 0;
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+        }
+
+        .category-card span {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        /* Search Results */
+        .results-section {
+            margin-bottom: 2rem;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .results-count {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        .sort-select {
+            padding: 0.5rem 2rem 0.5rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        /* Article Cards */
+        .articles-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .article-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .article-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .article-card h4 {
+            color: var(--primary-color);
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .article-card p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .article-tag {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .article-tag.category {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .article-tag.difficulty-beginner {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .article-tag.difficulty-intermediate {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .article-tag.difficulty-advanced {
+            background: var(--error-color);
+            color: white;
+        }
+
+        /* Article Detail View */
+        .article-detail {
+            display: none;
+        }
+
+        .article-detail.active {
+            display: block;
+        }
+
+        .article-detail-header {
+            margin-bottom: 2rem;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        .article-detail h2 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .article-content {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            line-height: 1.8;
+        }
+
+        .article-content h3 {
+            color: var(--primary-color);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .article-content p {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .article-content ul, .article-content ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .article-content li {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .article-content code {
+            background: var(--bg-tertiary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .article-content pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+
+        .article-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .tip-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success-color);
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .tip-box strong {
+            color: var(--success-color);
+        }
+
+        .warning-box {
+            background: rgba(238, 138, 29, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .warning-box strong {
+            color: var(--warning-color);
+        }
+
+        /* Related Articles */
+        .related-articles {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .related-articles h3 {
+            margin-bottom: 1rem;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .related-card {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .related-card:hover {
+            background: var(--border-color);
+        }
+
+        .related-card h5 {
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .related-card p {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-links h3 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 4px;
+        }
+
+        .quick-link:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Empty State */
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .no-results h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Stats Banner */
+        .stats-banner {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+        }
+
+        .stat-item strong {
+            display: block;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .stat-item span {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Loading */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-container {
+                flex-direction: column;
+            }
+
+            .search-container button {
+                width: 100%;
+            }
+
+            .kb-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Design Technology - Mazzetti</h1>
+            <p class="subtitle">Revit Knowledge Base</p>
+        </header>
+
+        <div class="bep-form" style="display: block;">
+            <!-- Main KB View -->
+            <div id="kbMainView">
+                <div class="kb-header">
+                    <h2>Knowledge Base</h2>
+                    <div class="kb-nav">
+                        <a href="index.html" class="btn-secondary">Home</a>
+                        <a href="dashboard.html" class="btn-secondary">BIM Dashboard</a>
+                    </div>
+                </div>
+
+                <!-- Search Section -->
+                <div class="search-section">
+                    <h2>How can we help you?</h2>
+                    <p>Search our knowledge base for solutions to common Revit workflow issues</p>
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="Search for issues, workflows, tips..." autofocus>
+                        <button class="btn-primary" id="searchBtn">Search</button>
+                    </div>
+                </div>
+
+                <!-- Stats Banner -->
+                <div class="stats-banner">
+                    <div class="stat-item">
+                        <strong id="totalArticles">0</strong>
+                        <span>Articles</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong id="totalCategories">0</strong>
+                        <span>Categories</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong id="totalViews">12.5K</strong>
+                        <span>Total Views</span>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="quick-links">
+                    <h3>Popular Topics</h3>
+                    <div class="quick-links-grid" id="quickLinks"></div>
+                </div>
+
+                <!-- Categories Section -->
+                <div class="categories-section">
+                    <h3>Browse by Category</h3>
+                    <div class="categories-grid" id="categoriesGrid"></div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="results-section" id="resultsSection" style="display: none;">
+                    <div class="results-header">
+                        <h3>Search Results</h3>
+                        <div>
+                            <span class="results-count" id="resultsCount"></span>
+                            <select class="sort-select" id="sortSelect">
+                                <option value="relevance">Most Relevant</option>
+                                <option value="newest">Newest First</option>
+                                <option value="popular">Most Popular</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="articles-list" id="articlesList"></div>
+                    <div class="no-results" id="noResults" style="display: none;">
+                        <h3>No results found</h3>
+                        <p>Try different keywords or browse by category</p>
+                    </div>
+                </div>
+
+                <!-- All Articles -->
+                <div class="results-section" id="allArticlesSection">
+                    <div class="results-header">
+                        <h3>All Articles</h3>
+                        <span class="results-count" id="allArticlesCount"></span>
+                    </div>
+                    <div class="articles-list" id="allArticlesList"></div>
+                </div>
+
+                <div class="loading-spinner" id="loadingSpinner">
+                    <p>Loading...</p>
+                </div>
+            </div>
+
+            <!-- Article Detail View -->
+            <div id="articleDetailView" class="article-detail">
+                <div class="article-detail-header">
+                    <div class="back-btn" id="backBtn">
+                        ← Back to Knowledge Base
+                    </div>
+                    <h2 id="articleTitle"></h2>
+                    <div class="article-meta" id="articleMeta"></div>
+                </div>
+                <div class="article-content" id="articleContent"></div>
+                <div class="related-articles" id="relatedArticles">
+                    <h3>Related Articles</h3>
+                    <div class="related-grid" id="relatedGrid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Knowledge Base Data
+        const knowledgeBase = {
+            categories: [
+                { id: 'modeling', name: 'Modeling', icon: '🏗️', count: 8 },
+                { id: 'families', name: 'Families', icon: '📦', count: 6 },
+                { id: 'collaboration', name: 'Collaboration', icon: '👥', count: 5 },
+                { id: 'performance', name: 'Performance', icon: '⚡', count: 7 },
+                { id: 'documentation', name: 'Documentation', icon: '📄', count: 6 },
+                { id: 'coordination', name: 'Coordination', icon: '🔄', count: 4 },
+                { id: 'worksharing', name: 'Worksharing', icon: '💾', count: 5 },
+                { id: 'troubleshooting', name: 'Troubleshooting', icon: '🔧', count: 9 }
+            ],
+            articles: [
+                {
+                    id: 1,
+                    title: 'How to Fix Slow Model Performance in Revit',
+                    summary: 'Learn techniques to optimize your Revit model and improve overall performance when working with large or complex projects.',
+                    category: 'performance',
+                    difficulty: 'intermediate',
+                    tags: ['optimization', 'lag', 'slow', 'performance', 'speed'],
+                    views: 2450,
+                    dateCreated: '2024-01-15',
+                    content: `
+                        <h3>Problem Description</h3>
+                        <p>Large Revit models can become slow and unresponsive, causing delays in your workflow. This guide covers the most effective strategies to improve model performance.</p>
+
+                        <h3>Solution Steps</h3>
+                        <ol>
+                            <li><strong>Audit the Model:</strong> Go to File → Open → Select your model → Check "Audit" before opening. This cleans up corrupt elements.</li>
+                            <li><strong>Purge Unused Elements:</strong> Go to Manage tab → Purge Unused. Remove all unused families, views, and materials.</li>
+                            <li><strong>Reduce Detail Level:</strong> Set views to "Coarse" detail when not needed for documentation.</li>
+                            <li><strong>Use Worksets Effectively:</strong> Close worksets you're not actively using to reduce memory load.</li>
+                            <li><strong>Limit Linked Models:</strong> Only load linked models when necessary. Use "Unload" for coordination-only links.</li>
+                        </ol>
+
+                        <div class="tip-box">
+                            <strong>Pro Tip:</strong> Create a "Working View" with minimal graphics settings for everyday navigation. Switch to detailed views only when needed.
+                        </div>
+
+                        <h3>Additional Optimizations</h3>
+                        <ul>
+                            <li>Reduce the number of DWG imports</li>
+                            <li>Simplify complex families</li>
+                            <li>Remove unnecessary room separation lines</li>
+                            <li>Limit the use of in-place families</li>
+                            <li>Avoid excessive detail in early design phases</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <strong>Warning:</strong> Always save a backup before running audit or purge operations.
+                        </div>
+                    `,
+                    related: [2, 5, 8]
+                },
+                {
+                    id: 2,
+                    title: 'Resolving Worksharing Conflicts',
+                    summary: 'Step-by-step guide to understanding and resolving element borrowing conflicts when multiple users work on the same model.',
+                    category: 'worksharing',
+                    difficulty: 'intermediate',
+                    tags: ['worksharing', 'conflicts', 'central model', 'synchronize', 'borrowing'],
+                    views: 1820,
+                    dateCreated: '2024-01-20',
+                    content: `
+                        <h3>Understanding Worksharing Conflicts</h3>
+                        <p>Worksharing conflicts occur when two or more users try to modify the same elements simultaneously. Revit tracks element ownership to prevent data loss.</p>
+
+                        <h3>Types of Conflicts</h3>
+                        <ul>
+                            <li><strong>Element Borrowing:</strong> Another user has already borrowed the element you're trying to edit.</li>
+                            <li><strong>Permission Conflicts:</strong> You don't have permission to edit elements in certain worksets.</li>
+                            <li><strong>Synchronization Conflicts:</strong> Changes made by others conflict with your local changes.</li>
+                        </ul>
+
+                        <h3>Resolution Steps</h3>
+                        <ol>
+                            <li><strong>Check Element Ownership:</strong> Use Collaborate → Show Worksharing Display to see who owns elements.</li>
+                            <li><strong>Request Permission:</strong> Right-click on element → "Make element editable" or use Editing Requests.</li>
+                            <li><strong>Communicate with Team:</strong> Contact the element owner to release ownership or coordinate changes.</li>
+                            <li><strong>Synchronize Frequently:</strong> Sync with central every 30-60 minutes to minimize conflicts.</li>
+                        </ol>
+
+                        <div class="tip-box">
+                            <strong>Best Practice:</strong> Establish clear workset assignments at project start. Assign ownership by discipline (MEP, Structural, Architectural).
+                        </div>
+
+                        <h3>Preventing Future Conflicts</h3>
+                        <ul>
+                            <li>Create dedicated worksets for each discipline</li>
+                            <li>Use a checkout policy for shared elements</li>
+                            <li>Establish synchronization schedules</li>
+                            <li>Document workset ownership in project BEP</li>
+                        </ul>
+                    `,
+                    related: [7, 10, 15]
+                },
+                {
+                    id: 3,
+                    title: 'Creating Custom Revit Families from Scratch',
+                    summary: 'Complete guide to building parametric families with proper constraints, parameters, and nested components.',
+                    category: 'families',
+                    difficulty: 'advanced',
+                    tags: ['families', 'parametric', 'custom', 'constraints', 'parameters'],
+                    views: 3100,
+                    dateCreated: '2024-02-01',
+                    content: `
+                        <h3>Family Creation Basics</h3>
+                        <p>Custom families are essential for creating project-specific content that meets your exact requirements. This guide walks through the complete process.</p>
+
+                        <h3>Getting Started</h3>
+                        <ol>
+                            <li><strong>Choose the Right Template:</strong> Select a template that matches your category (furniture, equipment, generic model, etc.)</li>
+                            <li><strong>Understand Reference Planes:</strong> Reference planes are the skeleton of your family. Create them first.</li>
+                            <li><strong>Set Up Parameters:</strong> Define instance and type parameters before building geometry.</li>
+                        </ol>
+
+                        <h3>Building Geometry</h3>
+                        <ol>
+                            <li>Lock geometry to reference planes using constraints</li>
+                            <li>Use extrusions, blends, sweeps, and revolves appropriately</li>
+                            <li>Keep geometry as simple as possible for performance</li>
+                            <li>Test parameters by flexing the family</li>
+                        </ol>
+
+                        <div class="warning-box">
+                            <strong>Important:</strong> Never leave geometry unconstrained. Unconstrained elements break when parameters change.
+                        </div>
+
+                        <h3>Parameter Best Practices</h3>
+                        <pre><code>// Naming Convention
+Length_Overall     // Use underscores for spaces
+Width_Cabinet      // Category_Descriptor format
+Height_Default     // Clear, descriptive names
+</code></pre>
+
+                        <ul>
+                            <li>Use consistent naming conventions</li>
+                            <li>Group parameters logically (Dimensions, Identity Data, etc.)</li>
+                            <li>Use formulas for dependent parameters</li>
+                            <li>Include visibility parameters for LOD control</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <strong>Pro Tip:</strong> Always create a "Family Testing" project to test families in a real project environment before distribution.
+                        </div>
+                    `,
+                    related: [4, 6, 12]
+                },
+                {
+                    id: 4,
+                    title: 'Fixing Corrupt Family Files',
+                    summary: 'Troubleshooting steps for repairing families that crash Revit or display unexpected behavior.',
+                    category: 'troubleshooting',
+                    difficulty: 'advanced',
+                    tags: ['families', 'corrupt', 'crash', 'repair', 'troubleshooting'],
+                    views: 1650,
+                    dateCreated: '2024-02-10',
+                    content: `
+                        <h3>Signs of Family Corruption</h3>
+                        <ul>
+                            <li>Revit crashes when loading or editing the family</li>
+                            <li>Parameters don't work or show incorrect values</li>
+                            <li>Geometry displays incorrectly in different views</li>
+                            <li>Family editor shows errors or warnings</li>
+                        </ul>
+
+                        <h3>Recovery Methods</h3>
+                        <h4>Method 1: Audit and Compact</h4>
+                        <ol>
+                            <li>Open the family with Audit checkbox enabled</li>
+                            <li>Save As with "Compact File" option</li>
+                            <li>Reload into project</li>
+                        </ol>
+
+                        <h4>Method 2: Transfer to New Family</h4>
+                        <ol>
+                            <li>Create a new family using the same template</li>
+                            <li>Copy/paste geometry from corrupt family</li>
+                            <li>Recreate parameters manually</li>
+                            <li>Re-establish constraints</li>
+                        </ol>
+
+                        <h4>Method 3: Export/Import</h4>
+                        <ol>
+                            <li>Export family geometry to SAT or DWG</li>
+                            <li>Create new family</li>
+                            <li>Import geometry and rebuild parametrics</li>
+                        </ol>
+
+                        <div class="warning-box">
+                            <strong>Note:</strong> Severely corrupted families may need to be rebuilt from scratch. Always maintain backups of working families.
+                        </div>
+                    `,
+                    related: [3, 8, 11]
+                },
+                {
+                    id: 5,
+                    title: 'Optimizing View Performance with View Templates',
+                    summary: 'How to create and manage view templates that improve both workflow efficiency and model performance.',
+                    category: 'performance',
+                    difficulty: 'beginner',
+                    tags: ['views', 'templates', 'performance', 'graphics', 'display'],
+                    views: 2100,
+                    dateCreated: '2024-02-15',
+                    content: `
+                        <h3>Why Use View Templates?</h3>
+                        <p>View templates ensure consistent appearance across similar views and dramatically speed up view setup. They're also key to controlling graphics performance.</p>
+
+                        <h3>Creating a View Template</h3>
+                        <ol>
+                            <li>Set up a view exactly how you want it</li>
+                            <li>Go to View → View Templates → Create Template from Current View</li>
+                            <li>Name it clearly (e.g., "Working_Floor_Plan_Coarse")</li>
+                            <li>Choose which properties to include in the template</li>
+                        </ol>
+
+                        <h3>Recommended Templates</h3>
+                        <ul>
+                            <li><strong>Working Views:</strong> Coarse detail, minimal graphics for navigation</li>
+                            <li><strong>Coordination Views:</strong> Medium detail for clash detection</li>
+                            <li><strong>Documentation Views:</strong> Fine detail for sheets</li>
+                            <li><strong>Presentation Views:</strong> Realistic or shaded for rendering</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <strong>Performance Tip:</strong> Set "Detail Level" to Coarse and disable shadows in working view templates to significantly improve responsiveness.
+                        </div>
+
+                        <h3>Template Management</h3>
+                        <ul>
+                            <li>Store templates in your project template file</li>
+                            <li>Use Transfer Project Standards to share templates</li>
+                            <li>Document template purposes in project standards</li>
+                            <li>Update templates centrally, they propagate to all assigned views</li>
+                        </ul>
+                    `,
+                    related: [1, 8, 13]
+                },
+                {
+                    id: 6,
+                    title: 'Loading and Managing Family Libraries',
+                    summary: 'Best practices for organizing, loading, and maintaining Revit family libraries across projects.',
+                    category: 'families',
+                    difficulty: 'beginner',
+                    tags: ['families', 'library', 'organization', 'loading', 'management'],
+                    views: 1890,
+                    dateCreated: '2024-02-20',
+                    content: `
+                        <h3>Library Organization</h3>
+                        <p>A well-organized family library saves time and reduces errors. Follow these organizational principles.</p>
+
+                        <h3>Folder Structure</h3>
+                        <pre><code>Revit_Library/
+├── Annotations/
+├── Architectural/
+│   ├── Casework/
+│   ├── Doors/
+│   ├── Furniture/
+│   └── Windows/
+├── MEP/
+│   ├── Electrical/
+│   ├── Mechanical/
+│   └── Plumbing/
+├── Structural/
+└── Generic/
+</code></pre>
+
+                        <h3>Naming Conventions</h3>
+                        <ul>
+                            <li>Use Category_Manufacturer_Model format</li>
+                            <li>Include dimensions for standard items</li>
+                            <li>Add version numbers for custom families</li>
+                            <li>Avoid special characters and spaces</li>
+                        </ul>
+
+                        <h3>Loading Best Practices</h3>
+                        <ol>
+                            <li>Only load families you actually need</li>
+                            <li>Use "Load Family" rather than "Insert from File"</li>
+                            <li>Check for duplicates before loading</li>
+                            <li>Purge unused families regularly</li>
+                        </ol>
+
+                        <div class="tip-box">
+                            <strong>Pro Tip:</strong> Create a "starter kit" of commonly used families in your project template to avoid repeated loading.
+                        </div>
+                    `,
+                    related: [3, 4, 11]
+                },
+                {
+                    id: 7,
+                    title: 'Setting Up Worksharing for a New Project',
+                    summary: 'Complete guide to enabling worksharing, creating worksets, and establishing collaboration workflows.',
+                    category: 'worksharing',
+                    difficulty: 'beginner',
+                    tags: ['worksharing', 'setup', 'worksets', 'central model', 'collaboration'],
+                    views: 2680,
+                    dateCreated: '2024-03-01',
+                    content: `
+                        <h3>When to Enable Worksharing</h3>
+                        <p>Enable worksharing when multiple users need to work on the same model simultaneously, or when you need to manage large models with worksets.</p>
+
+                        <h3>Initial Setup Steps</h3>
+                        <ol>
+                            <li><strong>Prepare Your Model:</strong> Complete initial setup (levels, grids, templates) before enabling worksharing.</li>
+                            <li><strong>Enable Worksharing:</strong> Go to Collaborate → Worksets → Enable Worksharing</li>
+                            <li><strong>Create Worksets:</strong> Establish worksets based on disciplines or building areas</li>
+                            <li><strong>Save Central Model:</strong> Save to a network location accessible to all team members</li>
+                        </ol>
+
+                        <h3>Recommended Workset Structure</h3>
+                        <ul>
+                            <li><strong>Shared Levels and Grids:</strong> For datum elements (default)</li>
+                            <li><strong>Architecture:</strong> Architectural elements</li>
+                            <li><strong>Structure:</strong> Structural elements</li>
+                            <li><strong>MEP:</strong> Or separate worksets for M, E, and P</li>
+                            <li><strong>Site:</strong> Site elements and topography</li>
+                            <li><strong>Links:</strong> All linked files</li>
+                        </ul>
+
+                        <h3>Creating Local Files</h3>
+                        <ol>
+                            <li>Each user opens the central model</li>
+                            <li>Revit automatically prompts to create local copy</li>
+                            <li>Save local file to user's local drive (not network)</li>
+                            <li>Never work directly in the central model</li>
+                        </ol>
+
+                        <div class="warning-box">
+                            <strong>Critical:</strong> The central file should NEVER be opened directly for editing. Always work in local files.
+                        </div>
+                    `,
+                    related: [2, 10, 15]
+                },
+                {
+                    id: 8,
+                    title: 'Troubleshooting Revit Crashes',
+                    summary: 'Diagnostic steps and solutions for common Revit crash scenarios and error messages.',
+                    category: 'troubleshooting',
+                    difficulty: 'intermediate',
+                    tags: ['crash', 'error', 'troubleshooting', 'stability', 'journal'],
+                    views: 3420,
+                    dateCreated: '2024-03-05',
+                    content: `
+                        <h3>Common Crash Causes</h3>
+                        <ul>
+                            <li>Corrupt model elements</li>
+                            <li>Outdated graphics drivers</li>
+                            <li>Insufficient system resources</li>
+                            <li>Add-in conflicts</li>
+                            <li>Corrupt families or linked files</li>
+                        </ul>
+
+                        <h3>Diagnostic Steps</h3>
+                        <ol>
+                            <li><strong>Check Journal Files:</strong> Located in %LOCALAPPDATA%\\Autodesk\\Revit\\Autodesk Revit [version]\\Journals</li>
+                            <li><strong>Review Error Messages:</strong> Note exact error text before crash</li>
+                            <li><strong>Test in Safe Mode:</strong> Hold SHIFT while starting Revit to disable add-ins</li>
+                            <li><strong>Try on Different Machine:</strong> Isolate whether issue is model or machine specific</li>
+                        </ol>
+
+                        <h3>Resolution Steps</h3>
+                        <h4>For Model Corruption:</h4>
+                        <ol>
+                            <li>Open model with Audit enabled</li>
+                            <li>Detach from central if workshared</li>
+                            <li>Purge unused elements</li>
+                            <li>Check for warnings (Manage → Warnings)</li>
+                        </ol>
+
+                        <h4>For Graphics Issues:</h4>
+                        <ol>
+                            <li>Update graphics drivers to latest version</li>
+                            <li>Try switching between DirectX and OpenGL in Options</li>
+                            <li>Reduce hardware acceleration settings</li>
+                        </ol>
+
+                        <div class="tip-box">
+                            <strong>Recovery Tip:</strong> Journal files can help recover work. The journal records all actions and can sometimes be used to recreate lost work.
+                        </div>
+                    `,
+                    related: [1, 4, 11]
+                },
+                {
+                    id: 9,
+                    title: 'Linking and Managing CAD Files',
+                    summary: 'Best practices for importing, linking, and managing DWG files in Revit projects.',
+                    category: 'coordination',
+                    difficulty: 'beginner',
+                    tags: ['CAD', 'DWG', 'linking', 'import', 'AutoCAD'],
+                    views: 2240,
+                    dateCreated: '2024-03-10',
+                    content: `
+                        <h3>Link vs Import</h3>
+                        <p>Always prefer linking over importing CAD files. Links maintain connection to source files and are easier to manage.</p>
+
+                        <h3>Linking Best Practices</h3>
+                        <ol>
+                            <li><strong>Use Link CAD:</strong> Insert → Link CAD (not Import CAD)</li>
+                            <li><strong>Set Correct Positioning:</strong> Auto - Origin to Origin for coordinated files</li>
+                            <li><strong>Choose Appropriate Layer Settings:</strong> Use "Visible" layers only to reduce overhead</li>
+                            <li><strong>Link Current View Only:</strong> Check this option for plan-specific drawings</li>
+                        </ol>
+
+                        <h3>Managing Linked CAD</h3>
+                        <ul>
+                            <li>Use Manage Links dialog to control all links</li>
+                            <li>Create a dedicated workset for CAD links</li>
+                            <li>Use View/Graphics Overrides for visibility control</li>
+                            <li>Reload links when source files update</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <strong>Performance Warning:</strong> Multiple DWG imports significantly impact model performance. Limit to essential files only.
+                        </div>
+
+                        <h3>Exploding CAD (When Necessary)</h3>
+                        <p>If you must explode CAD for trace-over:</p>
+                        <ol>
+                            <li>Import (don't link) into a separate view</li>
+                            <li>Explode immediately</li>
+                            <li>Delete what you don't need</li>
+                            <li>Move to detail items group</li>
+                            <li>Delete original import when done tracing</li>
+                        </ol>
+                    `,
+                    related: [14, 1, 5]
+                },
+                {
+                    id: 10,
+                    title: 'Synchronizing with Central Best Practices',
+                    summary: 'Guidelines for efficient synchronization workflows to minimize conflicts and data loss.',
+                    category: 'worksharing',
+                    difficulty: 'beginner',
+                    tags: ['synchronize', 'central', 'save', 'worksharing', 'backup'],
+                    views: 1970,
+                    dateCreated: '2024-03-15',
+                    content: `
+                        <h3>Synchronization Basics</h3>
+                        <p>Synchronizing with central publishes your changes and retrieves others' changes. Do it frequently and strategically.</p>
+
+                        <h3>When to Synchronize</h3>
+                        <ul>
+                            <li>After completing significant changes</li>
+                            <li>Before taking breaks</li>
+                            <li>Before and after meetings</li>
+                            <li>At regular intervals (every 30-60 minutes)</li>
+                            <li>Before closing Revit</li>
+                        </ul>
+
+                        <h3>Synchronization Options</h3>
+                        <ol>
+                            <li><strong>Synchronize Now:</strong> Quick sync with default options (Ctrl+S)</li>
+                            <li><strong>Synchronize with Central:</strong> Full dialog with options</li>
+                            <li><strong>Relinquish:</strong> Release borrowed elements without saving</li>
+                        </ol>
+
+                        <h3>Best Practices</h3>
+                        <ul>
+                            <li>Add meaningful comments describing your changes</li>
+                            <li>Review "Pending Changes" before synchronizing</li>
+                            <li>Check for conflicts before accepting others' changes</li>
+                            <li>Use "Compact Central Model" periodically (coordinator only)</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <strong>Team Tip:</strong> Establish team-wide synchronization schedules. Announce major syncs in team chat to avoid mid-sync conflicts.
+                        </div>
+                    `,
+                    related: [2, 7, 15]
+                },
+                {
+                    id: 11,
+                    title: 'Resolving Model Warnings',
+                    summary: 'How to identify, understand, and fix the most common Revit model warnings.',
+                    category: 'troubleshooting',
+                    difficulty: 'intermediate',
+                    tags: ['warnings', 'errors', 'cleanup', 'troubleshooting', 'maintenance'],
+                    views: 2560,
+                    dateCreated: '2024-03-20',
+                    content: `
+                        <h3>Accessing Warnings</h3>
+                        <p>Go to Manage → Warnings to see all model warnings. Warnings indicate issues that may cause problems.</p>
+
+                        <h3>Critical Warnings to Address</h3>
+                        <ul>
+                            <li><strong>Room/Space Not Enclosed:</strong> Fix room boundaries for accurate area calculations</li>
+                            <li><strong>Elements are Overlapping:</strong> Duplicate or conflicting geometry</li>
+                            <li><strong>Highlighted walls overlap:</strong> Wall cleanup issues</li>
+                            <li><strong>Instance is Missing:</strong> Lost family reference</li>
+                        </ul>
+
+                        <h3>Warning Resolution Workflow</h3>
+                        <ol>
+                            <li>Export warnings to HTML for documentation</li>
+                            <li>Sort by warning type</li>
+                            <li>Address critical warnings first</li>
+                            <li>Use "Show" button to locate problematic elements</li>
+                            <li>Fix or delete as appropriate</li>
+                            <li>Track progress in project log</li>
+                        </ol>
+
+                        <h3>Warnings to Deprioritize</h3>
+                        <p>Some warnings are informational and may not need immediate action:</p>
+                        <ul>
+                            <li>Slightly off-axis elements (if intentional)</li>
+                            <li>Room separation line warnings in design phase</li>
+                            <li>Analytical model warnings in architectural models</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <strong>Goal:</strong> Keep warnings under 200 for optimal performance. Models with 1000+ warnings often have significant issues.
+                        </div>
+                    `,
+                    related: [4, 8, 1]
+                },
+                {
+                    id: 12,
+                    title: 'Creating Annotation Families',
+                    summary: 'Build custom tags, symbols, and annotation families for your documentation standards.',
+                    category: 'families',
+                    difficulty: 'intermediate',
+                    tags: ['annotation', 'tags', 'symbols', 'documentation', 'families'],
+                    views: 1780,
+                    dateCreated: '2024-03-25',
+                    content: `
+                        <h3>Annotation Family Basics</h3>
+                        <p>Annotation families are 2D, view-specific elements that scale with the view. They include tags, symbols, and detail components.</p>
+
+                        <h3>Creating a Custom Tag</h3>
+                        <ol>
+                            <li>File → New → Family → Select annotation template (e.g., Generic Tag.rft)</li>
+                            <li>Create text using Labels (not Text, which is static)</li>
+                            <li>Link labels to category parameters</li>
+                            <li>Add graphics (lines, filled regions)</li>
+                            <li>Save and load into project</li>
+                        </ol>
+
+                        <h3>Label Parameters</h3>
+                        <p>Labels connect to model element parameters. Set up label parameters:</p>
+                        <ul>
+                            <li>Click "Create" → "Label"</li>
+                            <li>Select category parameter from dropdown</li>
+                            <li>Combine multiple parameters with separators</li>
+                            <li>Add prefix/suffix text</li>
+                        </ul>
+
+                        <h3>Symbol Families</h3>
+                        <p>Symbols don't reference model elements. Use for:</p>
+                        <ul>
+                            <li>North arrows</li>
+                            <li>Section marks</li>
+                            <li>Matchlines</li>
+                            <li>Key notes</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <strong>Best Practice:</strong> Store annotation families in your project template. This ensures consistent documentation across all projects.
+                        </div>
+                    `,
+                    related: [3, 6, 13]
+                },
+                {
+                    id: 13,
+                    title: 'Sheet Setup and Title Blocks',
+                    summary: 'Configure sheets, customize title blocks, and set up sheet lists for construction documents.',
+                    category: 'documentation',
+                    difficulty: 'beginner',
+                    tags: ['sheets', 'title block', 'documentation', 'printing', 'CD'],
+                    views: 2890,
+                    dateCreated: '2024-04-01',
+                    content: `
+                        <h3>Creating Sheets</h3>
+                        <ol>
+                            <li>View → Sheet → New Sheet</li>
+                            <li>Select title block family</li>
+                            <li>Enter sheet number and name</li>
+                            <li>Drag views onto sheet</li>
+                        </ol>
+
+                        <h3>Title Block Customization</h3>
+                        <p>Customize title blocks in the Family Editor:</p>
+                        <ul>
+                            <li>Add company logo (import image)</li>
+                            <li>Create labels for project info parameters</li>
+                            <li>Include revision schedules</li>
+                            <li>Add sheet-specific parameters</li>
+                        </ul>
+
+                        <h3>Sheet Parameters</h3>
+                        <table style="width:100%; border-collapse: collapse; margin: 1rem 0;">
+                            <tr style="background: var(--bg-tertiary);">
+                                <th style="padding: 0.5rem; text-align: left;">Parameter</th>
+                                <th style="padding: 0.5rem; text-align: left;">Purpose</th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Sheet Number</td>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Unique identifier (A101, M-201)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Sheet Name</td>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Descriptive title</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Drawn By</td>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Author initials</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem;">Checked By</td>
+                                <td style="padding: 0.5rem;">Reviewer initials</td>
+                            </tr>
+                        </table>
+
+                        <h3>Sheet Lists</h3>
+                        <p>Create a sheet list schedule:</p>
+                        <ol>
+                            <li>View → Schedules → Sheet List</li>
+                            <li>Add fields: Sheet Number, Sheet Name, etc.</li>
+                            <li>Sort by sheet number</li>
+                            <li>Place on cover sheet</li>
+                        </ol>
+
+                        <div class="tip-box">
+                            <strong>Organization:</strong> Use a consistent sheet numbering system (discipline prefix + number) for easy navigation.
+                        </div>
+                    `,
+                    related: [5, 12, 16]
+                },
+                {
+                    id: 14,
+                    title: 'Linking Revit Models for Coordination',
+                    summary: 'Strategies for linking multiple Revit models, managing coordinates, and copy/monitor workflows.',
+                    category: 'coordination',
+                    difficulty: 'intermediate',
+                    tags: ['linking', 'coordination', 'copy monitor', 'shared coordinates', 'models'],
+                    views: 2150,
+                    dateCreated: '2024-04-10',
+                    content: `
+                        <h3>Link Management Strategy</h3>
+                        <p>Large projects often require multiple linked models. Proper setup is essential for coordination.</p>
+
+                        <h3>Setting Up Shared Coordinates</h3>
+                        <ol>
+                            <li>Designate one model as the coordination model</li>
+                            <li>Establish Project Base Point and Survey Point</li>
+                            <li>Use Acquire Coordinates from site file</li>
+                            <li>Publish coordinates to linked models</li>
+                        </ol>
+
+                        <h3>Linking Best Practices</h3>
+                        <ul>
+                            <li><strong>Positioning:</strong> Use "Auto - By Shared Coordinates"</li>
+                            <li><strong>Worksets:</strong> Place links on dedicated worksets</li>
+                            <li><strong>Visibility:</strong> Create view templates for link visibility</li>
+                            <li><strong>Room Bounding:</strong> Only enable for architectural links</li>
+                        </ul>
+
+                        <h3>Copy/Monitor Workflow</h3>
+                        <p>Copy/Monitor tracks elements between linked models:</p>
+                        <ol>
+                            <li>Collaborate → Copy/Monitor → Select Link</li>
+                            <li>Choose elements to monitor (grids, levels)</li>
+                            <li>Copy elements from link to host</li>
+                            <li>Review coordination changes periodically</li>
+                        </ol>
+
+                        <div class="warning-box">
+                            <strong>Caution:</strong> Copy/Monitor can create confusion if overused. Limit to essential elements (grids, levels, structural columns).
+                        </div>
+                    `,
+                    related: [9, 15, 7]
+                },
+                {
+                    id: 15,
+                    title: 'BIM Collaboration with Revit Cloud Worksharing',
+                    summary: 'Guide to using BIM 360 and Autodesk Construction Cloud for cloud-based collaboration.',
+                    category: 'collaboration',
+                    difficulty: 'intermediate',
+                    tags: ['BIM 360', 'cloud', 'ACC', 'collaboration', 'remote'],
+                    views: 1920,
+                    dateCreated: '2024-04-15',
+                    content: `
+                        <h3>Cloud Collaboration Benefits</h3>
+                        <ul>
+                            <li>Access models from anywhere</li>
+                            <li>No VPN required</li>
+                            <li>Automatic backups</li>
+                            <li>Integrated design review</li>
+                        </ul>
+
+                        <h3>Initial Setup</h3>
+                        <ol>
+                            <li>Create project in BIM 360 / ACC</li>
+                            <li>Assign team members and roles</li>
+                            <li>Upload or initiate model in cloud</li>
+                            <li>Configure folder structure</li>
+                        </ol>
+
+                        <h3>Working with Cloud Models</h3>
+                        <ul>
+                            <li><strong>Open:</strong> Use Revit Home → BIM 360 / ACC</li>
+                            <li><strong>Cache:</strong> Models cache locally for performance</li>
+                            <li><strong>Sync:</strong> Same as traditional worksharing</li>
+                            <li><strong>Offline:</strong> Limited offline work possible with cache</li>
+                        </ul>
+
+                        <h3>Best Practices</h3>
+                        <ul>
+                            <li>Maintain stable internet connection</li>
+                            <li>Clear local cache periodically</li>
+                            <li>Use naming conventions for cloud folders</li>
+                            <li>Coordinate sync schedules with team</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <strong>Performance Tip:</strong> First download may be slow. Subsequent opens use local cache and are much faster.
+                        </div>
+                    `,
+                    related: [2, 7, 10]
+                },
+                {
+                    id: 16,
+                    title: 'Creating and Managing Schedules',
+                    summary: 'Build quantity schedules, key schedules, and material takeoffs for documentation.',
+                    category: 'documentation',
+                    difficulty: 'beginner',
+                    tags: ['schedules', 'quantities', 'takeoffs', 'documentation', 'data'],
+                    views: 2340,
+                    dateCreated: '2024-04-20',
+                    content: `
+                        <h3>Schedule Types</h3>
+                        <ul>
+                            <li><strong>Schedule/Quantities:</strong> Lists model elements and properties</li>
+                            <li><strong>Material Takeoff:</strong> Extracts material quantities</li>
+                            <li><strong>Sheet List:</strong> Document sheets in project</li>
+                            <li><strong>Key Schedule:</strong> Lookup table for applied values</li>
+                        </ul>
+
+                        <h3>Creating a Schedule</h3>
+                        <ol>
+                            <li>View → Schedules → Schedule/Quantities</li>
+                            <li>Select category (Doors, Rooms, etc.)</li>
+                            <li>Add fields from Available Fields list</li>
+                            <li>Set filters, sorting, and grouping</li>
+                            <li>Format columns and totals</li>
+                        </ol>
+
+                        <h3>Calculated Fields</h3>
+                        <p>Create formulas for derived values:</p>
+                        <pre><code>// Example: Cost calculation
+Unit Cost * Area
+
+// Example: Combined name
+Family and Type + " - " + Comments</code></pre>
+
+                        <h3>Schedule Formatting</h3>
+                        <ul>
+                            <li>Use conditional formatting for visual flags</li>
+                            <li>Hide columns needed for calculations but not display</li>
+                            <li>Group and subtotal for summaries</li>
+                            <li>Apply view templates for consistent appearance</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <strong>Export Tip:</strong> Schedules can be exported to Excel via the Export → Reports menu. Useful for external data analysis.
+                        </div>
+                    `,
+                    related: [13, 17, 5]
+                },
+                {
+                    id: 17,
+                    title: 'Room and Space Tagging Workflows',
+                    summary: 'Properly create, tag, and manage rooms and spaces for area analysis and MEP calculations.',
+                    category: 'modeling',
+                    difficulty: 'beginner',
+                    tags: ['rooms', 'spaces', 'tagging', 'areas', 'MEP'],
+                    views: 1650,
+                    dateCreated: '2024-04-25',
+                    content: `
+                        <h3>Rooms vs Spaces</h3>
+                        <ul>
+                            <li><strong>Rooms:</strong> Architectural areas for schedules and finish tracking</li>
+                            <li><strong>Spaces:</strong> MEP volumes for load calculations</li>
+                        </ul>
+
+                        <h3>Placing Rooms</h3>
+                        <ol>
+                            <li>Go to Architecture → Room</li>
+                            <li>Click inside enclosed area</li>
+                            <li>Room automatically finds boundaries</li>
+                            <li>Use Room Separation Lines for non-wall boundaries</li>
+                        </ol>
+
+                        <h3>Room Boundaries</h3>
+                        <p>What counts as a room boundary:</p>
+                        <ul>
+                            <li>Walls (unless Room Bounding is disabled)</li>
+                            <li>Room Separation Lines</li>
+                            <li>Floors and Ceilings (for volume)</li>
+                            <li>Columns (optional setting)</li>
+                        </ul>
+
+                        <h3>Common Issues</h3>
+                        <ul>
+                            <li><strong>Room Not Enclosed:</strong> Check for gaps in walls</li>
+                            <li><strong>Multiple Rooms Merging:</strong> Add separation lines</li>
+                            <li><strong>Zero Area:</strong> Upper limit not set, or not enclosed</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <strong>MEP Tip:</strong> For MEP models, use "Place Spaces Automatically" to quickly generate spaces from linked architectural rooms.
+                        </div>
+                    `,
+                    related: [16, 11, 18]
+                },
+                {
+                    id: 18,
+                    title: 'Working with Phasing in Revit',
+                    summary: 'Configure phases for renovation projects, demolition plans, and construction sequencing.',
+                    category: 'modeling',
+                    difficulty: 'intermediate',
+                    tags: ['phasing', 'renovation', 'demolition', 'existing', 'construction'],
+                    views: 1890,
+                    dateCreated: '2024-05-01',
+                    content: `
+                        <h3>Understanding Phases</h3>
+                        <p>Phases represent different time periods in your project. Essential for renovation and phased construction projects.</p>
+
+                        <h3>Default Phases</h3>
+                        <ul>
+                            <li><strong>Existing:</strong> Conditions before work begins</li>
+                            <li><strong>New Construction:</strong> Work being performed</li>
+                        </ul>
+
+                        <h3>Setting Up Phases</h3>
+                        <ol>
+                            <li>Manage → Phases</li>
+                            <li>Add phases as needed (Demo, Phase 1, Phase 2, etc.)</li>
+                            <li>Define phase filters for visibility control</li>
+                            <li>Configure graphic overrides for each phase status</li>
+                        </ol>
+
+                        <h3>Element Phase Properties</h3>
+                        <ul>
+                            <li><strong>Phase Created:</strong> When element appears</li>
+                            <li><strong>Phase Demolished:</strong> When element is removed</li>
+                        </ul>
+
+                        <h3>View Phase Settings</h3>
+                        <p>Each view has phase settings:</p>
+                        <ul>
+                            <li><strong>Phase:</strong> What time period the view shows</li>
+                            <li><strong>Phase Filter:</strong> How elements are displayed (existing, new, demolished)</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <strong>Important:</strong> Verify phase settings on every view, especially when creating sheets. Wrong phase settings cause incorrect documentation.
+                        </div>
+                    `,
+                    related: [17, 5, 13]
+                },
+                {
+                    id: 19,
+                    title: 'Dynamo for Revit Beginners',
+                    summary: 'Introduction to visual programming with Dynamo to automate repetitive Revit tasks.',
+                    category: 'performance',
+                    difficulty: 'advanced',
+                    tags: ['Dynamo', 'automation', 'scripting', 'visual programming', 'efficiency'],
+                    views: 2780,
+                    dateCreated: '2024-05-10',
+                    content: `
+                        <h3>What is Dynamo?</h3>
+                        <p>Dynamo is a visual programming tool that extends Revit capabilities. Automate tasks, analyze data, and create complex geometry.</p>
+
+                        <h3>Getting Started</h3>
+                        <ol>
+                            <li>Access via Manage → Dynamo</li>
+                            <li>Start with sample scripts in the library</li>
+                            <li>Connect nodes by dragging wires</li>
+                            <li>Run to execute the script</li>
+                        </ol>
+
+                        <h3>Common Use Cases</h3>
+                        <ul>
+                            <li>Batch rename views or sheets</li>
+                            <li>Copy parameters between elements</li>
+                            <li>Generate geometry from Excel data</li>
+                            <li>Automated model auditing</li>
+                            <li>Complex pattern generation</li>
+                        </ul>
+
+                        <h3>Node Categories</h3>
+                        <ul>
+                            <li><strong>Input:</strong> Numbers, strings, sliders</li>
+                            <li><strong>Revit:</strong> Select, create, modify elements</li>
+                            <li><strong>List:</strong> Manage data collections</li>
+                            <li><strong>Math:</strong> Calculations and operations</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <strong>Learning Path:</strong> Start with simple scripts like "Select All Walls → Get Parameter → Change Parameter" before attempting complex automation.
+                        </div>
+
+                        <h3>Resources</h3>
+                        <ul>
+                            <li>Dynamo Primer (dynamoprimer.com)</li>
+                            <li>Dynamo Forum community</li>
+                            <li>Package Manager for pre-built nodes</li>
+                        </ul>
+                    `,
+                    related: [1, 20, 8]
+                },
+                {
+                    id: 20,
+                    title: 'Keyboard Shortcuts and Efficiency Tips',
+                    summary: 'Master Revit keyboard shortcuts and workflow optimizations for faster productivity.',
+                    category: 'performance',
+                    difficulty: 'beginner',
+                    tags: ['shortcuts', 'keyboard', 'efficiency', 'productivity', 'workflow'],
+                    views: 3150,
+                    dateCreated: '2024-05-15',
+                    content: `
+                        <h3>Essential Shortcuts</h3>
+                        <table style="width:100%; border-collapse: collapse; margin: 1rem 0;">
+                            <tr style="background: var(--bg-tertiary);">
+                                <th style="padding: 0.5rem; text-align: left;">Shortcut</th>
+                                <th style="padding: 0.5rem; text-align: left;">Command</th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);"><code>WA</code></td>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Wall</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);"><code>DR</code></td>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Door</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);"><code>VV</code> or <code>VG</code></td>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Visibility/Graphics</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);"><code>ZA</code></td>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Zoom All</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);"><code>ZR</code></td>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Zoom Region</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);"><code>CS</code></td>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Create Similar</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);"><code>EH</code></td>
+                                <td style="padding: 0.5rem; border-bottom: 1px solid var(--border-color);">Hide Element</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem;"><code>WT</code></td>
+                                <td style="padding: 0.5rem;">Tile Windows</td>
+                            </tr>
+                        </table>
+
+                        <h3>Customizing Shortcuts</h3>
+                        <ol>
+                            <li>View → User Interface → Keyboard Shortcuts</li>
+                            <li>Search for command</li>
+                            <li>Assign new key combination</li>
+                            <li>Export for backup and sharing</li>
+                        </ol>
+
+                        <h3>Workflow Tips</h3>
+                        <ul>
+                            <li>Use Tab to cycle through selections</li>
+                            <li>Spacebar to flip elements during placement</li>
+                            <li>Ctrl+Click to add to selection</li>
+                            <li>Right-click for context menu options</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <strong>Pro Tip:</strong> Create shortcuts for your most-used commands. Keep them to 2 characters for speed.
+                        </div>
+                    `,
+                    related: [5, 19, 1]
+                }
+            ]
+        };
+
+        // State
+        let currentView = 'main';
+        let filteredArticles = [...knowledgeBase.articles];
+        let activeCategory = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderQuickLinks();
+            renderAllArticles();
+            updateStats();
+            attachEventListeners();
+        });
+
+        function attachEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            document.getElementById('searchBtn').addEventListener('click', handleSearch);
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleSearch();
+            });
+            document.getElementById('backBtn').addEventListener('click', showMainView);
+            document.getElementById('sortSelect').addEventListener('change', handleSort);
+        }
+
+        function renderCategories() {
+            const grid = document.getElementById('categoriesGrid');
+            grid.innerHTML = knowledgeBase.categories.map(cat => `
+                <div class="category-card" data-category="${cat.id}" onclick="filterByCategory('${cat.id}')">
+                    <div class="category-icon">${cat.icon}</div>
+                    <h4>${cat.name}</h4>
+                    <span>${cat.count} articles</span>
+                </div>
+            `).join('');
+        }
+
+        function renderQuickLinks() {
+            const popularTopics = [
+                'Performance optimization',
+                'Worksharing conflicts',
+                'Family creation',
+                'Model crashes',
+                'View templates',
+                'Linking models'
+            ];
+
+            const container = document.getElementById('quickLinks');
+            container.innerHTML = popularTopics.map(topic => `
+                <div class="quick-link" onclick="searchByTopic('${topic}')">
+                    → ${topic}
+                </div>
+            `).join('');
+        }
+
+        function renderArticles(articles, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = articles.map(article => `
+                <div class="article-card" onclick="showArticle(${article.id})">
+                    <h4>${article.title}</h4>
+                    <p>${article.summary}</p>
+                    <div class="article-meta">
+                        <span class="article-tag category">${getCategoryName(article.category)}</span>
+                        <span class="article-tag difficulty-${article.difficulty}">${capitalizeFirst(article.difficulty)}</span>
+                        <span class="article-tag">${article.views.toLocaleString()} views</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAllArticles() {
+            const sortedArticles = [...knowledgeBase.articles].sort((a, b) => b.views - a.views);
+            renderArticles(sortedArticles, 'allArticlesList');
+            document.getElementById('allArticlesCount').textContent = `${sortedArticles.length} articles`;
+        }
+
+        function updateStats() {
+            document.getElementById('totalArticles').textContent = knowledgeBase.articles.length;
+            document.getElementById('totalCategories').textContent = knowledgeBase.categories.length;
+        }
+
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            if (!searchTerm) {
+                document.getElementById('resultsSection').style.display = 'none';
+                document.getElementById('allArticlesSection').style.display = 'block';
+                clearCategorySelection();
+                return;
+            }
+
+            filteredArticles = knowledgeBase.articles.filter(article => {
+                const searchString = `
+                    ${article.title}
+                    ${article.summary}
+                    ${article.tags.join(' ')}
+                    ${article.category}
+                `.toLowerCase();
+                return searchString.includes(searchTerm);
+            });
+
+            displaySearchResults();
+        }
+
+        function searchByTopic(topic) {
+            document.getElementById('searchInput').value = topic;
+            handleSearch();
+        }
+
+        function filterByCategory(categoryId) {
+            // Toggle category selection
+            if (activeCategory === categoryId) {
+                activeCategory = null;
+                clearCategorySelection();
+                document.getElementById('resultsSection').style.display = 'none';
+                document.getElementById('allArticlesSection').style.display = 'block';
+                return;
+            }
+
+            activeCategory = categoryId;
+
+            // Update UI
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.classList.remove('active');
+                if (card.dataset.category === categoryId) {
+                    card.classList.add('active');
+                }
+            });
+
+            filteredArticles = knowledgeBase.articles.filter(article => article.category === categoryId);
+            displaySearchResults();
+        }
+
+        function clearCategorySelection() {
+            activeCategory = null;
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.classList.remove('active');
+            });
+        }
+
+        function displaySearchResults() {
+            document.getElementById('allArticlesSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'block';
+
+            if (filteredArticles.length === 0) {
+                document.getElementById('articlesList').style.display = 'none';
+                document.getElementById('noResults').style.display = 'block';
+                document.getElementById('resultsCount').textContent = '0 results';
+            } else {
+                document.getElementById('noResults').style.display = 'none';
+                document.getElementById('articlesList').style.display = 'flex';
+                document.getElementById('resultsCount').textContent = `${filteredArticles.length} results`;
+                renderArticles(filteredArticles, 'articlesList');
+            }
+        }
+
+        function handleSort() {
+            const sortValue = document.getElementById('sortSelect').value;
+
+            switch (sortValue) {
+                case 'newest':
+                    filteredArticles.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
+                    break;
+                case 'popular':
+                    filteredArticles.sort((a, b) => b.views - a.views);
+                    break;
+                case 'relevance':
+                default:
+                    // Keep current order for relevance
+                    break;
+            }
+
+            renderArticles(filteredArticles, 'articlesList');
+        }
+
+        function showArticle(articleId) {
+            const article = knowledgeBase.articles.find(a => a.id === articleId);
+            if (!article) return;
+
+            currentView = 'article';
+            document.getElementById('kbMainView').style.display = 'none';
+            document.getElementById('articleDetailView').style.display = 'block';
+            document.getElementById('articleDetailView').classList.add('active');
+
+            document.getElementById('articleTitle').textContent = article.title;
+            document.getElementById('articleContent').innerHTML = article.content;
+
+            // Render meta
+            document.getElementById('articleMeta').innerHTML = `
+                <span class="article-tag category">${getCategoryName(article.category)}</span>
+                <span class="article-tag difficulty-${article.difficulty}">${capitalizeFirst(article.difficulty)}</span>
+                <span class="article-tag">${article.views.toLocaleString()} views</span>
+                <span class="article-tag">Updated: ${formatDate(article.dateCreated)}</span>
+            `;
+
+            // Render related articles
+            if (article.related && article.related.length > 0) {
+                const relatedArticles = article.related.map(id => knowledgeBase.articles.find(a => a.id === id)).filter(Boolean);
+                document.getElementById('relatedGrid').innerHTML = relatedArticles.map(related => `
+                    <div class="related-card" onclick="showArticle(${related.id})">
+                        <h5>${related.title}</h5>
+                        <p>${getCategoryName(related.category)}</p>
+                    </div>
+                `).join('');
+                document.getElementById('relatedArticles').style.display = 'block';
+            } else {
+                document.getElementById('relatedArticles').style.display = 'none';
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function showMainView() {
+            currentView = 'main';
+            document.getElementById('articleDetailView').style.display = 'none';
+            document.getElementById('articleDetailView').classList.remove('active');
+            document.getElementById('kbMainView').style.display = 'block';
+        }
+
+        // Utility functions
+        function getCategoryName(categoryId) {
+            const category = knowledgeBase.categories.find(c => c.id === categoryId);
+            return category ? category.name : categoryId;
+        }
+
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+<elevenlabs-convai agent-id="agent_2701kg03cad9fh6byj09baqctrg1"></elevenlabs-convai>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+</body>
+</html>

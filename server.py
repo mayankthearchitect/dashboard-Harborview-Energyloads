@@ -24,8 +24,14 @@ db = BIMDatabase()
 
 @app.route('/')
 def index():
-    """Serve the dashboard as default page."""
-    return send_from_directory('.', 'dashboard.html')
+    """Serve the home page as default page."""
+    return send_from_directory('.', 'index.html')
+
+
+@app.route('/index.html')
+def home():
+    """Serve the home page."""
+    return send_from_directory('.', 'index.html')
 
 
 @app.route('/bim-execution-plan.html')
@@ -44,6 +50,12 @@ def dashboard():
 def view_project():
     """Serve the view project page."""
     return send_from_directory('.', 'view-project.html')
+
+
+@app.route('/revit-knowledge-base.html')
+def revit_knowledge_base():
+    """Serve the Revit Knowledge Base page."""
+    return send_from_directory('.', 'revit-knowledge-base.html')
 
 
 @app.route('/styles.css')

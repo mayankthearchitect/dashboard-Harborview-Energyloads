@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Design Technology - Mazzetti - BIM Tools and Resources">
+    <title>Design Technology - Mazzetti</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Home Page Specific Styles */
+        .home-container {
+            padding: 3rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .welcome-section h2 {
+            font-size: 1.75rem;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            border: none;
+            padding: 0;
+        }
+
+        .welcome-section p {
+            color: var(--text-secondary);
+            font-size: 1.0625rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Feature Tiles */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-tile {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .feature-tile:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        .feature-tile h3 {
+            font-size: 1.375rem;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-tile p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-tile .tile-badge {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 0.375rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+
+        .feature-tile:hover .tile-badge {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Coming Soon Tiles */
+        .feature-tile.coming-soon {
+            opacity: 0.7;
+            cursor: default;
+        }
+
+        .feature-tile.coming-soon:hover {
+            transform: none;
+            border-color: var(--border-color);
+            box-shadow: none;
+        }
+
+        .feature-tile.coming-soon .feature-icon {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #6b7280 100%);
+        }
+
+        .feature-tile.coming-soon .tile-badge {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .feature-tile.coming-soon:hover .tile-badge {
+            background: var(--warning-color);
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-stat {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .quick-stat strong {
+            display: block;
+            font-size: 1.75rem;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .quick-stat span {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .home-footer {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .home-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .home-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Chatbot hint */
+        .chatbot-hint {
+            background: linear-gradient(135deg, rgba(0, 101, 149, 0.1) 0%, rgba(0, 77, 115, 0.1) 100%);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .chatbot-hint-icon {
+            font-size: 1.5rem;
+        }
+
+        .chatbot-hint p {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+        }
+
+        .chatbot-hint strong {
+            color: var(--primary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .home-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-tile {
+                padding: 2rem 1.5rem;
+            }
+
+            .feature-icon {
+                width: 64px;
+                height: 64px;
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Design Technology - Mazzetti</h1>
+            <p class="subtitle">BIM Tools & Resources</p>
+        </header>
+
+        <div class="home-container">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h2>Welcome to Design Technology</h2>
+                <p>Access BIM execution planning tools, knowledge resources, and AI-powered assistance for your Revit workflows.</p>
+            </div>
+
+            <!-- Chatbot Hint -->
+            <div class="chatbot-hint">
+                <span class="chatbot-hint-icon">💬</span>
+                <p><strong>Need help?</strong> Click the chat icon in the bottom right corner to talk with our AI assistant about Revit workflows and BIM questions.</p>
+            </div>
+
+            <!-- Feature Tiles -->
+            <div class="features-grid">
+                <!-- BIM Execution Plan -->
+                <a href="dashboard.html" class="feature-tile">
+                    <div class="feature-icon">📋</div>
+                    <h3>BIM Execution Plan</h3>
+                    <p>Create, manage, and export comprehensive BIM Execution Plans following NIBS NBIMS-US V4 and ISO 19650 standards.</p>
+                    <span class="tile-badge">View Dashboard →</span>
+                </a>
+
+                <!-- Revit Knowledge Base -->
+                <a href="revit-knowledge-base.html" class="feature-tile">
+                    <div class="feature-icon">📚</div>
+                    <h3>Revit Knowledge Base</h3>
+                    <p>Search our library of solutions, tutorials, and best practices for common Revit workflow issues and optimizations.</p>
+                    <span class="tile-badge">Browse Articles →</span>
+                </a>
+
+                <!-- Coming Soon: Standards Library -->
+                <div class="feature-tile coming-soon">
+                    <div class="feature-icon">📐</div>
+                    <h3>Standards Library</h3>
+                    <p>Access company CAD/BIM standards, templates, family libraries, and documentation guidelines.</p>
+                    <span class="tile-badge">Coming Soon</span>
+                </div>
+
+                <!-- Coming Soon: Training Hub -->
+                <div class="feature-tile coming-soon">
+                    <div class="feature-icon">🎓</div>
+                    <h3>Training Hub</h3>
+                    <p>Interactive training modules, video tutorials, and certification tracking for design technology skills.</p>
+                    <span class="tile-badge">Coming Soon</span>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <strong>20+</strong>
+                    <span>KB Articles</span>
+                </div>
+                <div class="quick-stat">
+                    <strong>8</strong>
+                    <span>Categories</span>
+                </div>
+                <div class="quick-stat">
+                    <strong>10</strong>
+                    <span>BEP Sections</span>
+                </div>
+                <div class="quick-stat">
+                    <strong>24/7</strong>
+                    <span>AI Support</span>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="home-footer">
+                <p>Design Technology Team | <a href="mailto:dt@mazzetti.com">dt@mazzetti.com</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ElevenLabs Chatbot Widget -->
+    <elevenlabs-convai agent-id="agent_2701kg03cad9fh6byj09baqctrg1"></elevenlabs-convai>
+    <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+</body>
+</html>
